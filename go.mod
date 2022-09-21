@@ -1,4 +1,4 @@
-module github/Archie1978/goglpi
+module github.com/Archie1978/goglpi
 
 go 1.18
 
