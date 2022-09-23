@@ -108,7 +108,7 @@ func TestConnectionGLPI(t *testing.T) {
 	}
 
 	fmt.Printf("Test 5: get Option search ->")
-	mapOptions,err:=glpi.ListSearchOptions(Computer{})
+	mapOptions, err := glpi.ListSearchOptions(Computer{})
 	if err != nil {
 		fmt.Printf("Failed: %v\n", err)
 	} else {
@@ -120,5 +120,5 @@ func TestConnectionGLPI(t *testing.T) {
 				fmt.Println(id, ": ", fieldFeature.Name)
 			}
 		}
-	}	
+	}
 }

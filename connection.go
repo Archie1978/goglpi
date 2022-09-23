@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"reflect"
 	"strconv"
-	
+
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -70,12 +70,11 @@ func (glpi *GLPI) executeResquest(request *http.Request, objectReturn interface{
 	if string(body[0:8]) == "[\"ERROR_" {
 		return fmt.Errorf("GLPI response error:%v", string(body))
 	}
-/*
+
 	fmt.Println("======================")
 	fmt.Println(request)
 	fmt.Println(string(body))
 	fmt.Println("======================")
-*/
 
 	err = json.Unmarshal(body, objectReturn)
 	if err != nil {
@@ -84,7 +83,6 @@ func (glpi *GLPI) executeResquest(request *http.Request, objectReturn interface{
 
 	return nil
 }
-
 
 // CriteriaSearch:
 type CriteriaSearch struct {
@@ -159,17 +157,16 @@ func (glpi GLPI) SearchWithName(itemName string, item Item, criterias []Criteria
 
 }
 
-
 type SearchOption struct {
-    Name	string
-    Table	string
-	Field	string
-	Datatype	string
-	Uid			string
+	Name     string
+	Table    string
+	Field    string
+	Datatype string
+	Uid      string
 }
-	  
+
 // ListSearchOptions: Get all fields for requesting tiem
-func (glpi GLPI)ListSearchOptions(item Item)(map[int]SearchOption,error){
+func (glpi GLPI) ListSearchOptions(item Item) (map[int]SearchOption, error) {
 	// Get type of Item
 	itemType := reflect.TypeOf(item)
 
@@ -180,30 +177,30 @@ func (glpi GLPI)ListSearchOptions(item Item)(map[int]SearchOption,error){
 	// Create Request
 	request, err := http.NewRequest("GET", urlGLPIraw.String(), nil)
 	if err != nil {
-		return nil,  err
+		return nil, err
 	}
 
 	// Send request into Agent
-	result:=make(map[string]interface{})
+	result := make(map[string]interface{})
 	err = glpi.executeResquest(request, &result)
-	
-	resultReturn:=make(map[int]SearchOption)
-	for idString,interfaceMap :=range result{
-	
-		id,_:=strconv.Atoi(idString)
-		if id>0 {
+
+	resultReturn := make(map[int]SearchOption)
+	for idString, interfaceMap := range result {
+
+		id, _ := strconv.Atoi(idString)
+		if id > 0 {
 			var searchOption SearchOption
-			
+
 			cfg := &mapstructure.DecoderConfig{
 				Metadata: nil,
 				Result:   &searchOption,
 				TagName:  "json",
 			}
-		
+
 			decoder, _ := mapstructure.NewDecoder(cfg)
 			decoder.Decode(interfaceMap)
-		
-			resultReturn[id]=searchOption
+
+			resultReturn[id] = searchOption
 		}
 	}
 
@@ -219,8 +216,6 @@ type Link struct {
 	Rel  string
 	Href string
 }
-
-
 
 func (rangeLimit Range) String() string {
 	return fmt.Sprintf("%v-%v", rangeLimit.Min, rangeLimit.Max)
